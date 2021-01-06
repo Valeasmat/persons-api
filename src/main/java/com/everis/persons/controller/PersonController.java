@@ -32,7 +32,7 @@ public class PersonController {
                             person.getBlacklist()));
 
         }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(personResponse, HttpStatus.OK);
     }
