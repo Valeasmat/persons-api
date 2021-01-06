@@ -16,7 +16,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Single<PersonEntity> getPerson(String documentNumber) throws Exception {
         PersonEntity byDocument = personRepository.findByDocument(documentNumber);
-        if(byDocument.getBlacklist()) throw new IllegalAccessException("Blacklist true");
+        if(byDocument.getBlacklist()) throw new IllegalArgumentException("Blacklist true");
         return Single.just(byDocument);
     }
 }
