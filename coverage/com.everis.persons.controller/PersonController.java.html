@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">persons$ControllerTest.exec</a> &gt; <a href="index.source.html" class="el_package">com.everis.persons.controller</a> &gt; <span class="el_source">PersonController.java</span></div><h1>PersonController.java</h1><pre class="source lang-java linenums">package com.everis.persons.controller;
+
+
+import com.everis.persons.entity.PersonEntity;
+import com.everis.persons.entity.PersonResponse;
+import com.everis.persons.service.PersonService;
+import io.reactivex.Single;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+<span class="fc" id="L19">public class PersonController {</span>
+
+    @Autowired
+    private PersonService personService;
+    @ApiOperation(value = &quot;Get request to retrieve client's info&quot;,
+            response = PersonResponse.class,
+            produces = &quot;application/stream+json&quot;)
+    @ApiResponse(code = 200,message = &quot;Successful operation&quot;,response = PersonResponse.class)
+    @GetMapping(value = &quot;/core/persons&quot;,produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public ResponseEntity&lt;Single&lt;PersonResponse&gt;&gt; getPerson(@RequestParam(&quot;documentNumber&quot;) String documentNumber){
+        Single&lt;PersonResponse&gt; personResponse;
+        try{
+<span class="fc" id="L31">            Single&lt;PersonEntity&gt; personRequest= personService.getPerson(documentNumber);</span>
+<span class="fc" id="L32">            personResponse = personRequest</span>
+<span class="fc" id="L33">                    .map(person -&gt; new PersonResponse(</span>
+<span class="fc" id="L34">                            person.getId(),</span>
+<span class="fc" id="L35">                            person.getDocument(),</span>
+<span class="fc" id="L36">                            person.getFingerprint(),</span>
+<span class="fc" id="L37">                            person.getBlacklist()));</span>
+
+<span class="nc" id="L39">        }catch (Exception e){</span>
+<span class="nc" id="L40">            return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</span>
+<span class="fc" id="L41">        }</span>
+<span class="fc" id="L42">        return new ResponseEntity&lt;&gt;(personResponse, HttpStatus.OK);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
